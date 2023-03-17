@@ -26,7 +26,9 @@ TURF BUILDER will be a powerful tool for Hustlers who want to create their own u
 
 ## How to Get TURF?
 
-TURF can be obtained by participating in DOPE WARS in-game activities or by purchasing it on the DOPE WARS marketplace. Once you own TURF, you will be able to use TURF BUILDER to create your own section of the world and earn revenue from in-game activities that take place there.
+HOW TO MINT TURF IS STILL UNDER CONSIDERATION.
+
+Once you own TURF, you will be able to use TURF BUILDER to create your own section of the world and earn revenue from in-game activities that take place there.
 
 ## How to Use TURF BUILDER?
 
