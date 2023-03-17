@@ -14,15 +14,15 @@ TURF is a digital asset that represents ownership of a section of the DOPE WARS 
 
 ## What is TURF BUILDER?
 
-TURF BUILDER is a tool that will allow TURF owners to design and build their sections of the DOPE WARS world. With TURF BUILDER, Hustlers will be able to:
+TURF BUILDER is a tool that will allow TURF owners to design and build their sections of the DOPE WARS world. With TURF BUILDER, Hustlers will potentially  be able to:
 
 - Place buildings, objects, and other items in their TURF
-- Customize the terrain, environment, and weather of their TURF
 - Create interactive elements and events that players can engage with
 - Set rules and conditions for in-game activities that take place on their TURF
+- Customize the terrain, environment, and weather of their TURF
 - Earn revenue from in-game activities that take place on their TURF
 
-TURF BUILDER will be a powerful tool for Hustlers who want to create their own unique section of the DOPE WARS world and earn revenue from in-game activities that take place there.
+TURF BUILDER will be a powerful tool for Hustlers who want to create their own unique section of the DOPE WARS world and in the future potentially earn revenue from in-game activities that take place there.
 
 ## How to Get TURF?
 
