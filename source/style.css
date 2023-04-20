@@ -1,0 +1,50 @@
+body {
+    margin: 0;
+    overflow: hidden;
+  }
+  
+  canvas {
+    display: block;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 20px;
+    top: 10px;
+    z-index: 1;
+  }
+  
+  .button {
+    margin-top: 10px;
+    margin-left: 20px;
+  }
+  
+  .catButton {
+    margin-top: 20px;
+  }
+
+  .propTypes-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #freeTilesCounter {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1;
+  }
+
+  .selected {
+    background-color: #cfebb8;
+  }
+
+  .catSelected {
+    background-color: #f3dcb1;
+  }

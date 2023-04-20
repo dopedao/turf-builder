@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Turf</title>
+  <script src="./lib/three.min.js"></script>
+</head>
+<body>
+  <script type="module" src="window.js"></script>
+  <script type="module" src="UI.js"></script>
+  <script type="module" src="controls.js"></script>
+  <script type="module" src="tile_actions.js"></script>
+  <script type="module" src="sceneSetup.js"></script>
+  <script type="module" src="main.js"></script>
+
+  <div class="button-container">
+    <button class="catButton catSelected" id="tile">TILES</button>
+    <button class="button selected" id="tileAdd">Add tile</button>
+    <button class="button" id="tileRemove">Remove tile</button>
+    <button class="button selected" id="tileSelect">Tile select</button>
+    <button class="button" id="dragSelect">Drag select</button>
+
+    <button class="catButton" id="room">ROOMS</button>
+    <button class="button" id="createRoom">Create room</button>
+    <button class="button" id="removeRoom">Remove room</button>
+    <button class="button" id="createDoor">Create door</button>
+    <button class="button" id="removeDoor">Remove door</button>
+
+    <button class="catButton" id="props">Props</button>
+    <button class="button" id="addProp">Add prop</button>
+      <div class="propTypes-container" id="propTypesContainer" class="hidden"></div>
+    <button class="button" id="modifyProp">Modify prop</button>
+    <button class="button" id="deleteProp">Delete prop</button>
+  </div>
+
+
+  <div id="freeTilesCounter">Free Tiles: 0</div>
+
+</body>
+</html>
