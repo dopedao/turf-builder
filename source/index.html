@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="style.css">
   <title>Turf</title>
   <script src="./lib/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/1.0.11/pako.min.js"></script>
 </head>
 <body>
   <script type="module" src="window.js"></script>
@@ -28,6 +29,12 @@
     <button class="button" id="createDoor">Create door</button>
     <button class="button" id="removeDoor">Remove door</button>
 
+    <button class="catButton" id="paint">PAINTING</button>
+    <button class="button" id="paintFloor">Paint floor</button>
+    <div class="floorTextures-container" id="floorTexturesContainer" class="hidden"></div>
+    <button class="button" id="paintWall">Paint walls</button>
+    <div class="wallTextures-container" id="wallTexturesContainer" class="hidden"></div>
+
     <button class="catButton" id="props">Props</button>
     <button class="button" id="addProp">Add prop</button>
       <div class="propTypes-container" id="propTypesContainer" class="hidden"></div>
@@ -35,8 +42,13 @@
     <button class="button" id="deleteProp">Delete prop</button>
   </div>
 
-
   <div id="freeTilesCounter">Free Tiles: 0</div>
+
+  <div class="top-right-container">
+    <button class="top-button" id="saveButton">Save</button>
+    <button class="top-button" id="loadButton">Load</button>
+    <input type="file" id="fileInput" hidden />
+  </div>
 
 </body>
 </html>

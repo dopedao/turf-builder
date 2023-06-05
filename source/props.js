@@ -6,7 +6,7 @@ import {scene} from './sceneSetup.js';
 import {selectedProp, emptySelectedProp} from './select.js';
 import {isTileActive, isTileRoomWall, isTileExtWall, isTileProp, setTileProp, pushTilePropSharedIds,
         setTilePropType, getTilePropSharedIds, deleteTilePropSharedIds, deleteTilePropType,
-        setPropId, removePropId, readPropId} from './tile_actions.js';
+        setPropId, removePropId, readPropId, setTileMainProp, setTilePropPos, removeTileMainProp, removeTilePropPos, setTilePropSize, setTilePropTextId, removeTilePropSize, removeTilePropTextId, readTilePropPos} from './tile_actions.js';
 
 let checkProp = null;
 let selectedAddProp = propType.testSQ1;
@@ -146,12 +146,21 @@ export function placeModifyProp(modifyT, currentTile)
                 deleteTilePropSharedIds(modifyT.id);
                 deleteTilePropType(modifyT.id);
                 removePropId(modifyT.id);
+                removeTileMainProp(modifyT.id);
+                removeTilePropPos(modifyT.id);
+                removeTilePropSize(modifyT.id);
+                removeTilePropTextId(modifyT.id);
+
                 while (h < sharedIds.length)
                 {
                     setTileProp(sharedIds[h], false);
                     deleteTilePropType(sharedIds[h]);
                     deleteTilePropSharedIds(sharedIds[h]);
                     removePropId(sharedIds[h]);
+                    removeTileMainProp(sharedIds[h]);
+                    removeTilePropPos(sharedIds[h]);
+                    removeTilePropSize(sharedIds[h]);
+                    removeTilePropTextId(sharedIds[h]);
                     h++;
                 }
                 removeModifySelectedProp();
@@ -160,6 +169,11 @@ export function placeModifyProp(modifyT, currentTile)
 
 
                 const propId = createProp(tempProp.position, 0x8403fc, sizeX, sizeY, newProp.texturePath);
+                setTileMainProp(currentTile.id);
+                setTilePropPos(currentTile.id ,new THREE.Vector3(tempProp.position.x, 0.005, tempProp.position.z));
+                setTilePropSize(currentTile.id, new THREE.Vector2(sizeX, sizeY));
+                setTilePropTextId(currentTile.id, newProp.texturePath);
+
                 let i = 0;
                 while (i < propTileArray.length)
                 {
@@ -251,7 +265,11 @@ export function placeProp(tile)
         if (isLeftMouseDown)
         {
             const propId = createProp(tempProp.position, 0x8403fc, sizeX, sizeY, selectedAddProp.texturePath);
-            
+            setTileMainProp(tile.id);
+            setTilePropPos(tile.id ,new THREE.Vector3(tempProp.position.x, 0.005, tempProp.position.z));
+            setTilePropSize(tile.id, new THREE.Vector2(sizeX, sizeY));
+            setTilePropTextId(tile.id, selectedAddProp.texturePath);
+
             let i = 0;
             while (i < propTileArray.length)
             {
@@ -294,7 +312,7 @@ export function createProp(position, colorProp, sizeX, sizeY, texPath)
     else
     {
         const loader = new THREE.TextureLoader();
-        const propTex = loader.load(selectedAddProp.texturePath);
+        const propTex = loader.load(texPath);
         propTex.wrapS = THREE.RepeatWrapping;
         propTex.wrapT = THREE.RepeatWrapping;
         propTex.minFilter = THREE.NearestFilter;
@@ -410,5 +428,10 @@ function deletePropFromArray(prop)
     {
       propArray.splice(index, 1);
     }
+}
+
+export function deletePropArray()
+{
+    propArray = [];
 }
   

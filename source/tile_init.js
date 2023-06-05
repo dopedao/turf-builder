@@ -20,14 +20,30 @@ export function initTileSystem(width, height, scene)
       );
       const active = false;
       const extWall = false;
+      const extWallTextId = 0;
+      const extWallTexTileId = 0;
+      const firstExtWall = false;
+      const doubleExtWall = false;
+      const specialDouble = false;
+      const thirdExtWall = false;
+      const doubleTopExtWall = false;
       const roomWall = false;
+      const roomWallTexId = 0;
+      const doubleTopRoomWall = false;
+      const roomWallTopOfDoubleExtWall = false;
       const roomId = [];
       const door = false;
       const prop = false;
+      const mainProp = false;
       const propId = 0;
       const propType = "";
+      const propPos = new THREE.Vector3;
+      const propSize = new THREE.Vector2;
+      const propTextId = "";
       const propSharedIds = [];
       const miniProps = [];
+      const textureID = 6;
+      const atlasID = 1;
 
       const fillMaterial = new THREE.MeshBasicMaterial({
         color: 0x282e3b,
@@ -38,7 +54,13 @@ export function initTileSystem(width, height, scene)
       plane.rotation.x = -Math.PI / 2;
       scene.add(plane);
 
-      tiles.push({id, position, active, extWall, roomWall, roomId, door, prop, propType, propSharedIds, propId, miniProps, plane});
+      const planePosition = plane.position;
+      const planeRotation = plane.rotation.x;
+
+      tiles.push({id, position, active, extWall, extWallTextId, extWallTexTileId, firstExtWall, doubleExtWall, specialDouble, thirdExtWall,
+                    doubleTopExtWall, roomWall, roomWallTexId, doubleTopRoomWall, roomId, door, prop, propType, propSharedIds,
+                    propId, miniProps, plane, textureID, atlasID, roomWallTopOfDoubleExtWall, planePosition, planeRotation,
+                    mainProp, propPos, propSize, propTextId});
     }
   }
 }

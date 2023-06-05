@@ -11,6 +11,8 @@ export let selectionPlane;
 export let selectedProp = [];
 let highlightedTile = null;
 
+const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+const intersectionPoint = new THREE.Vector3();
 
 export function getIntersectedTile(event, camera)
 {
@@ -32,8 +34,8 @@ export function getIntersectedTile(event, camera)
 		selectedProp.push(intersectProps[0].object);
 	}
 
-    const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
-    const intersectionPoint = new THREE.Vector3();
+    // const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    // const intersectionPoint = new THREE.Vector3();
     raycaster.ray.intersectPlane(plane, intersectionPoint);
 
     const j = Math.round(intersectionPoint.x + (gridSize - 1) / 2);
@@ -42,10 +44,10 @@ export function getIntersectedTile(event, camera)
     if (i >= 0 && i < gridSize && j >= 0 && j < gridSize)
     {
         const tileIndex = j * gridSize + i;
-        return tiles[tileIndex];
+        return (tiles[tileIndex]);
     }
 
-    return null;
+    return (null);
 }
 
 export function emptySelectedProp()
@@ -108,13 +110,23 @@ export function selectedTileColor(event, camera)
                 highlightedTile = intersectedTile;
         
                 console.log(
-                    `ID: ${intersectedTile.id}, Pos: (${intersectedTile.position.x},${
-                    intersectedTile.position.z
-                    }), Act: (${intersectedTile.active}), extW: (${intersectedTile.extWall}), rooW: (${
-                    intersectedTile.roomWall}), rooId: (${intersectedTile.roomId}), door: (${
-					intersectedTile.door}), prop: (${intersectedTile.prop}), sharedProps: (${
-					intersectedTile.propSharedIds}), propType: (${intersectedTile.propType}), propId: (${
-					intersectedTile.propId})`
+                    `ID: (${intersectedTile.id
+					}), Pos: (${intersectedTile.position.x}, ${intersectedTile.position.z
+					}), Act: (${intersectedTile.active
+					}), extW: (${intersectedTile.extWall
+					}), rooW: (${intersectedTile.roomWall
+					}), rooId: (${intersectedTile.roomId
+					}), door: (${intersectedTile.door
+					}), prop: (${intersectedTile.prop
+					}), sharedProps: (${intersectedTile.propSharedIds
+					}), propType: (${intersectedTile.propType
+					}), propId: (${intersectedTile.propId
+					}), firstExtWall: (${intersectedTile.firstExtWall
+					}), doubleExtWall: (${intersectedTile.doubleExtWall
+					}), specialDoubleExtWall: (${intersectedTile.specialDouble
+					}), thirdExtWall: (${intersectedTile.thirdExtWall
+					}), doubleTopExtWall: (${intersectedTile.doubleTopExtWall
+					}), doubleTopRoomWall: (${intersectedTile.doubleTopRoomWall})`
                 );
             }
             else if (!intersectedTile && highlightedTile)
@@ -442,8 +454,7 @@ export function createSelectionPlane(colorPlane)
 {
 	const geometry = new THREE.PlaneGeometry(1, 1);
 	const material = new THREE.MeshBasicMaterial({
-	  color: colorPlane,//0x00ff00,
-	  //side: THREE.DoubleSide,
+	  color: colorPlane,
 	  transparent: true,
 	  opacity: 0.3
 	});

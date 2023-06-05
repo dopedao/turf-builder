@@ -1,8 +1,12 @@
 
-import {tiles} from './main.js';
+import {tiles, gridSize} from './main.js';
+import {scene} from './sceneSetup.js';
 import {isTileExtWall, isTileRoomWall, readRoomID, deleteElemRoomID, deleteFullRoomID,
-        removeTileDoor, removeTileRoomWall, changeTileColor, changeTileTexture} from './tile_actions.js';
-import {selectPlanesAdd} from './select.js';
+        removeTileDoor, removeTileRoomWall, changeTileColor, changeTileTexture, removeTileDoubleTopRoomWall,
+        doubleTopRoomWallPlanes, doubleTopExtWallPlanes, setTileDoubleTopExtWall, getTilePosX, getTilePosZ,
+        extWallTexture, removeTileRoomWallTopOfDoubleExtWall, addExternalWalls, roomPlanes, removeElemRoomPlanes,
+        roomWallTexture, getTileRoomWallTexId} from './tile_actions.js';
+import {selectPlanesAdd, getNeighbors} from './select.js';
 import {atlas_floor_1, af1_numCols, af1_numRows} from './texture.js';
 
 export function isRoomCorrect(borderTiles, lengthX, lengthY)
@@ -31,18 +35,18 @@ export function isRoomCorrect(borderTiles, lengthX, lengthY)
     }
 
     // Avoid room on room behavior for some cases 
-    // if (cross && !safeCross)
-    // {
-    //     return (false);
-    // }
+    if (cross && !safeCross)
+    {
+        return (false);
+    }
 
-    // if (roomIds.length > 1)
-    // {
-    //     if (hasCommonElement(roomIds) == false)
-    //     {
-    //         return (false);
-    //     }
-    // }
+    if (roomIds.length > 1)
+    {
+        if (hasCommonElement(roomIds) == false)
+        {
+            return (false);
+        }
+    }
   
     return (true);
   }
@@ -144,8 +148,6 @@ export function removeFullRoom(tile, tileArray)
     let j = 0;
     let k = 0;
 
-    let tempDelete = [];
-
     while (i < tileArray.length)
     {
         while (j < tileArray[i].roomId.length)
@@ -174,10 +176,54 @@ export function removeFullRoom(tile, tileArray)
 
             if (isTileExtWall(tileArray[i].id) == false)
             {
-                changeTileTexture(tileArray[i].id, 6, atlas_floor_1, af1_numRows, af1_numCols);
-                changeTileColor(tileArray[i].id, 0xffffff);
+                let planeObj = roomPlanes.find(obj => obj.id === tileArray[i].id);
+                
+                if (planeObj)
+                {
+                    scene.remove(planeObj.plane);
+                    removeElemRoomPlanes(tileArray[i].id);
+                }
             }
         }
+
+        // if (tileArray[i].doubleTopRoomWall == true)
+        // {
+        //     removeTileDoubleTopRoomWall(tileArray[i].id);
+        //     let planeObjIndex = doubleTopRoomWallPlanes.findIndex(obj => obj.id === tileArray[i].id);
+        //     if (planeObjIndex > -1)
+        //     {
+        //         let planeObj = doubleTopRoomWallPlanes[planeObjIndex];
+        //         scene.remove(planeObj.plane);
+        //         doubleTopRoomWallPlanes.splice(planeObjIndex, 1);
+        //     }
+        // }
+
+        // if (tileArray[i].roomWallTopOfDoubleExtWall == true)
+        // {
+        //     setTileDoubleTopExtWall(tileArray[i].id);
+        //     let tempArray = [];
+
+        //     const geometry = new THREE.PlaneGeometry(1, 1);
+        //     const material = new THREE.MeshBasicMaterial({
+        //     transparent: true,
+        //     opacity: 0.3
+        //     });
+        //     let plane = new THREE.Mesh(geometry, material);
+        //     plane.position.x = getTilePosX(tileArray[i].id);
+        //     plane.position.z = getTilePosZ(tileArray[i].id);
+        //     plane.position.y = 0.1;
+        //     plane.rotation.x = -Math.PI / 2;
+        //     tempArray.id = tileArray[i].id;
+        //     tempArray.plane = plane;
+        //     doubleTopExtWallPlanes.push(tempArray);
+        //     scene.add(doubleTopExtWallPlanes[doubleTopExtWallPlanes.length - 1].plane);
+
+        //     removeTileRoomWallTopOfDoubleExtWall(tileArray[i].id);
+
+        //     //const wallNeighbors = getNeighbors(tileArray[i].id, gridSize, gridSize, 1);
+        //     //extWallTexture(tileArray[i].id, wallNeighbors, tileArray[i].extWallTextId);
+        //     addExternalWalls();
+        // }
 
         j = 0;
         i++;
@@ -189,7 +235,19 @@ export function removeFullRoom(tile, tileArray)
 
     if (isTileExtWall(tile.id) == false)
     {
-        changeTileTexture(tile.id, 6, atlas_floor_1, af1_numRows, af1_numCols);
-        changeTileColor(tile.id, 0xffffff);
+        let planeObj = roomPlanes.find(obj => obj.id === tile.id);
+                
+        if (planeObj)
+        {
+            scene.remove(planeObj.plane);
+            removeElemRoomPlanes(tile.id);
+        }
     }
+
+    let roomWallTiles = tiles.filter(tile => tile.roomWall === true);
+    roomWallTiles.forEach(tile =>
+    {
+        const roomNeighbors = getNeighbors(tile.id, gridSize, gridSize, 1);
+        roomWallTexture(tile.id, roomNeighbors, getTileRoomWallTexId(tile.id));
+    });
 }
