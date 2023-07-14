@@ -1,17 +1,19 @@
-import {tiles, gridSize} from './main.js';
+import {tiles, gridSize, playTime, playTimeOn} from './main.js';
 import {scene} from './sceneSetup.js';
 import {planeSize} from './tile_init.js';
-import {isLeftMouseDown} from './controls.js';
+import {isLeftMouseDown, isWheelButtonDown} from './controls.js';
 import {tileUI, tileAdd, tileRemove, tileSelect, dragSelect, roomUI, createRoom, createDoor, removeRoom, removeDoor,
-        FreeTilesMin, FreeTilesPlu, propUI, addProp, modifyProp, deleteProp, paintUI, paintFloor, paintWall} from './UI.js';
+        FreeTilesMin, FreeTilesPlu, propUI, addProp, modifyProp, deleteProp, paintUI, paintFloor, paintWall, playUI} from './UI.js';
 import {getIntersectedTile, squareSelect, createSelectionPlane, updateSelectionPlane, removeSelectionPlane, 
         selectionPlane, getNeighbors, selectPlanesRemove} from './select.js';
 import {isRoomCorrect, showFullRoom, removeFullRoom} from './rooms.js';
-import {placeProp, removeCheckProp, removeSelectedProp, modifyPropPos, dragging} from './props.js';
+import {placeProp, removeCheckProp, removeSelectedProp, modifyPropPos, dragging, selectedAddProp, updateCheckProp} from './props.js';
+import {propType} from './props_info.js';
 import {createTextureFromAtlas, atlas_floor_1, af1_numCols, af1_numRows, atlas_arma_1, aa1_numCols, aa1_numRows,
             selectedTexId, selectedWallTexId, atlas_wall_1, aw1_numCols, aw1_numRows, atlas_room_1,
             ar1_numCols, ar1_numRows} from './texture.js';
 import {saveTileGrid} from './save.js';
+import {createPlayerPlane, playerPlane, playerMove, playerControls, destroyPlayerPlane} from './player.js';
 
 
 export let activeTiles = [];
@@ -853,8 +855,18 @@ export function clearModifyTile()
   
 export function buildTiles(event, camera)
 {
-    if (tileUI)
+    if (playUI)
     {
+        if (playerPlane == null)
+        {
+            createPlayerPlane();
+            playerControls();
+            playTimeOn();
+        }
+    }
+    else if (tileUI)
+    {
+        destroyPlayerPlane();
         removeCheckProp();
         if (tileSelect)
         {
@@ -938,6 +950,7 @@ export function buildTiles(event, camera)
     }
     else if (roomUI)
     {
+        destroyPlayerPlane();
         removeCheckProp();
         if (createRoom)
         {
@@ -1165,12 +1178,28 @@ export function buildTiles(event, camera)
     }
     else if (propUI)
     {
+        destroyPlayerPlane();
         if (addProp)
         {
             const intersectedTile = getIntersectedTile(event, camera);
 
             if (intersectedTile)
             {
+                if (isWheelButtonDown)
+                {
+                    //console.log(+selectedAddProp.textID)
+                    if (+selectedAddProp.textID < 2)
+                    {
+                        selectedAddProp.textID++;
+                    }
+                    else
+                    {
+                        selectedAddProp.textID = '0';
+                    }
+                    removeCheckProp();
+                    updateCheckProp(intersectedTile.position, 0x32a84e);
+                }
+
                 placeProp(intersectedTile);
             }
         }
@@ -1233,6 +1262,7 @@ export function buildTiles(event, camera)
     }
     else if (paintUI)
     {
+        destroyPlayerPlane();
         if (paintFloor == true)
         {
             const intersectedTile = getIntersectedTile(event, camera);

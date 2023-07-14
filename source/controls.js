@@ -6,6 +6,7 @@ import {onWindowResize} from './window.js';
 
 let isRightMouseDown = false;
 export let isLeftMouseDown = false;
+export let isWheelButtonDown = false;
 let prevMouse = { x: 0, y: 0 };
 
 
@@ -32,6 +33,13 @@ export function onMouseDown(event, camera)
         isRightMouseDown = true;
         prevMouse = { x: event.clientX, y: event.clientY };
 	}
+
+	if (event.button === 1) 
+    {
+		//console.log('Middle mouse button down');
+		isWheelButtonDown = true;
+		buildTiles(event, camera);
+    }
 }
 
 export function onMouseMove(event, camera)
@@ -67,6 +75,11 @@ export function onMouseUp(event)
 	if (event.button === 2)
 	{
 	    isRightMouseDown = false;
+	}
+
+	if (event.button === 1)
+	{
+	    isWheelButtonDown = false;
 	}
 }
 

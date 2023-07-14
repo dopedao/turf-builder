@@ -40,6 +40,10 @@ export const atlas_arma_1_ID =
     2: { id: 1, name: 2}
 };
 
+export const animPlayer = loader.load("assets/textures/player/animation.png");
+export const player_numRows = 8;
+export const player_numCols = 16;
+
 export function setSelectedWallTexture(texId)
 {
     selectedWallTexId = texId;

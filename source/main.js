@@ -6,17 +6,34 @@ import {atlas_floor_1, af1_numCols, af1_numRows} from './texture.js';
 import {clearActivetile, activateTile, changeTileColor, neighborArray, getTilePosX, getTilePosZ, roomWallTexture, getTileRoomWallTexId,
             changeTileTexture, removeTileColor, roomPlanes, clearRoomPlanes, setPropId} from './tile_actions.js';
 import {deletePropArray, createProp} from './props.js';
-
+import {playerControls, playerMove} from './player.js';
 
 renderer.domElement.style.position = 'relative';
 
 export let tiles = [];
 export const gridSize = 50;
 
+export let playTime = 0;
+
+export function playTimeOn()
+{
+    playTime = 1;
+}
+
+export function playTimeOff()
+{
+    playTime = 0;
+}
+
 function animate()
 {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
+
+    if (playTime == 1)
+    {
+        playerMove();
+    }
 }
 
 export function loadTiles(newTiles)

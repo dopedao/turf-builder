@@ -25,12 +25,12 @@ fileInput.addEventListener('change', function() {
   reader.onload = function() {
       const contents = reader.result;
       loadTileGrid(contents);
-      // Now contents has the contents of the file as a string. Do something with it here.
   }
 
   reader.readAsText(file);
 });
 
+export let playUI = false;
 
 export let tileUI = true;
 export let tileAdd = true;
@@ -52,6 +52,8 @@ export let propUI = false;
 export let addProp = false;
 export let modifyProp = false;
 export let deleteProp = false;
+
+const playButton = document.getElementById('play');
 
 const tileButton = document.getElementById('tile');
 const tileAddButton = document.getElementById('tileAdd');
@@ -75,8 +77,68 @@ const modifyPropButton = document.getElementById('modifyProp');
 const deletePropButton = document.getElementById('deleteProp');
 
 
+playButton.addEventListener('click', () =>
+{
+
+  playUI = true;
+
+  roomUI = false;
+  tileUI = false;
+  paintUI = false;
+  propUI = false;
+  
+  tileAdd = false;
+  tileRemove = false;
+  tileSelect = false;
+  dragSelect = false;
+
+  createRoom = false;
+  removeRoom = false;
+  createDoor = false;
+  removeDoor = false;
+
+  paintFloor = false;
+  paintWall = false;
+
+  addProp = false;
+  modifyProp = false;
+  deleteProp = false;
+
+  playButton.classList.add('selected');
+  
+  tileButton.classList.remove('catSelected');
+  roomButton.classList.remove('catSelected');
+  paintButton.classList.remove('catSelected');
+  propButton.classList.remove('catSelected');
+  
+  tileAddButton.classList.remove('selected');
+  tileRemoveButton.classList.remove('selected');
+  tileSelectButton.classList.remove('selected');
+  dragSelectButton.classList.remove('selected');
+
+  createRoomButton.classList.remove('selected');
+  removeRoomButton.classList.remove('selected');
+  createDoorButton.classList.remove('selected');
+  removeDoorButton.classList.remove('selected');
+
+  paintFloorButton.classList.remove('selected');
+  paintWallButton.classList.remove('selected');
+
+  addPropButton.classList.remove('selected');
+  modifyPropButton.classList.remove('selected');
+  deletePropButton.classList.remove('selected');
+
+  hidePropTypes();
+  hideFloorTextures();
+  hideWallTextures();
+
+});
+
+
 tileButton.addEventListener('click', () =>
 {
+  playUI = false;
+
   roomUI = false;
   tileUI = true;
   paintUI = false;
@@ -98,6 +160,8 @@ tileButton.addEventListener('click', () =>
   addProp = false;
   modifyProp = false;
   deleteProp = false;
+
+  playButton.classList.remove('selected');
   
   tileButton.classList.add('catSelected');
   roomButton.classList.remove('catSelected');
@@ -172,6 +236,8 @@ dragSelectButton.addEventListener('click', () =>
 
 roomButton.addEventListener('click', () =>
 {
+  playUI = false;
+
   roomUI = true;
   tileUI = false;
   paintUI = false;
@@ -193,6 +259,8 @@ roomButton.addEventListener('click', () =>
   addProp = false;
   modifyProp = false;
   deleteProp = false;
+
+  playButton.classList.remove('selected');
   
   tileButton.classList.remove('catSelected');
   roomButton.classList.add('catSelected');
@@ -283,6 +351,8 @@ removeDoorButton.addEventListener('click', () =>
 
 paintButton.addEventListener('click', () =>
 {
+  playUI = false;
+
   roomUI = false;
   tileUI = false;
   paintUI = true;
@@ -304,12 +374,13 @@ paintButton.addEventListener('click', () =>
   addProp = false;
   modifyProp = false;
   deleteProp = false;
+
+  playButton.classList.remove('selected');
   
   tileButton.classList.remove('catSelected');
   roomButton.classList.remove('catSelected');
   paintButton.classList.add('catselected');
   propButton.classList.remove('catSelected');
-  
   
   tileAddButton.classList.remove('selected');
   tileRemoveButton.classList.remove('selected');
@@ -469,6 +540,8 @@ function deselectAllWallTextures()
 
 propButton.addEventListener('click', () =>
 {
+  playUI = false;
+
   roomUI = false;
   tileUI = false;
   paintUI = false;
@@ -490,6 +563,8 @@ propButton.addEventListener('click', () =>
   addProp = true;
   modifyProp = false;
   deleteProp = false;
+
+  playButton.classList.remove('selected');
   
   tileButton.classList.remove('catSelected');
   roomButton.classList.remove('catSelected');

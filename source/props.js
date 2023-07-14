@@ -1,5 +1,6 @@
 
-import {isLeftMouseDown} from './controls.js';
+import {isLeftMouseDown, isWheelButtonDown} from './controls.js';
+import {createTextureFromAtlas} from './texture.js';
 import {gridSize} from './main.js';
 import {propType} from './props_info.js';
 import {scene} from './sceneSetup.js';
@@ -9,7 +10,7 @@ import {isTileActive, isTileRoomWall, isTileExtWall, isTileProp, setTileProp, pu
         setPropId, removePropId, readPropId, setTileMainProp, setTilePropPos, removeTileMainProp, removeTilePropPos, setTilePropSize, setTilePropTextId, removeTilePropSize, removeTilePropTextId, readTilePropPos} from './tile_actions.js';
 
 let checkProp = null;
-let selectedAddProp = propType.testSQ1;
+export let selectedAddProp = propType.testSQ1;
 let lastselectedSizeName = null;
 let modifySelected = null;
 export let dragging = false;
@@ -168,7 +169,8 @@ export function placeModifyProp(modifyT, currentTile)
                 modifySelected = null;
 
 
-                const propId = createProp(tempProp.position, 0x8403fc, sizeX, sizeY, newProp.texturePath);
+                const propId = createProp(tempProp.position, 0x8403fc, sizeX, sizeY, newProp.texturePath, selectedAddProp.numCols,
+                                            selectedAddProp.numRows, selectedAddProp.textID);
                 setTileMainProp(currentTile.id);
                 setTilePropPos(currentTile.id ,new THREE.Vector3(tempProp.position.x, 0.005, tempProp.position.z));
                 setTilePropSize(currentTile.id, new THREE.Vector2(sizeX, sizeY));
@@ -261,10 +263,12 @@ export function placeProp(tile)
 
     if (canPlace == true)
     {
-        const tempProp = updateCheckProp(tile.position, 0x32a84e);
+        let tempProp = updateCheckProp(tile.position, 0x32a84e);
+
         if (isLeftMouseDown)
         {
-            const propId = createProp(tempProp.position, 0x8403fc, sizeX, sizeY, selectedAddProp.texturePath);
+            const propId = createProp(tempProp.position, 0x8403fc, sizeX, sizeY, selectedAddProp.texturePath, selectedAddProp.numCols,
+                                        selectedAddProp.numRows, selectedAddProp.textID);
             setTileMainProp(tile.id);
             setTilePropPos(tile.id ,new THREE.Vector3(tempProp.position.x, 0.005, tempProp.position.z));
             setTilePropSize(tile.id, new THREE.Vector2(sizeX, sizeY));
@@ -295,40 +299,47 @@ export function placeProp(tile)
     }
 }
 
-export function createProp(position, colorProp, sizeX, sizeY, texPath)
+export function createProp(position, colorProp, sizeX, sizeY, texPath, numCol, numRow, textID)
 {
 	const geometry = new THREE.PlaneGeometry(sizeX, sizeY);
     let material = new THREE.MeshBasicMaterial;
+    let prop = new THREE.Mesh;
+    const loader = new THREE.TextureLoader();
+    const atlas = loader.load(texPath);
+    let texture = 0;
 
     if (texPath == "")
     {
         material = new THREE.MeshBasicMaterial(
         {
-        color: colorProp,
-        transparent: false,
-        opacity: 1
+            color: colorProp,
+            transparent: false,
+            opacity: 1
         });
+
+        prop = new THREE.Mesh(geometry, material);
+        prop.position.set(position.x, 0.005, position.z);
+        prop.rotation.x = -Math.PI / 2;
+
+        texture = createTextureFromAtlas(atlas, textID, numRow, numCol);
+        prop.material.map = texture;
+        prop.material.needsUpdate = true;
     }
     else
     {
-        const loader = new THREE.TextureLoader();
-        const propTex = loader.load(texPath);
-        propTex.wrapS = THREE.RepeatWrapping;
-        propTex.wrapT = THREE.RepeatWrapping;
-        propTex.minFilter = THREE.NearestFilter;
-        propTex.magFilter = THREE.NearestFilter;
-        propTex.needsUpdate = true;
-
         material = new THREE.MeshBasicMaterial(
         {
-        map: propTex,
-        transparent: true,
+            transparent: true,
         });
-    }
 
-	const prop = new THREE.Mesh(geometry, material);
-    prop.position.set(position.x, 0.005, position.z);
-	prop.rotation.x = -Math.PI / 2;
+        prop = new THREE.Mesh(geometry, material);
+        prop.position.set(position.x, 0.005, position.z);
+        prop.rotation.x = -Math.PI / 2;
+
+        texture = createTextureFromAtlas(atlas, textID, numRow, numCol);
+        prop.material.map = texture;
+        prop.material.needsUpdate = true;
+    }
 
     propArray.push(prop);
 	scene.add(propArray[propArray.length - 1]);
@@ -336,18 +347,25 @@ export function createProp(position, colorProp, sizeX, sizeY, texPath)
     return (prop.uuid);
 }
 
-export function createCheckProp(position, colorProp, sizeX, sizeY)
+export function createCheckProp(position, colorProp, sizeX, sizeY, texPath, numCol, numRow, textID)
 {
+    const loader = new THREE.TextureLoader();
+    const atlas = loader.load(texPath);
 	const geometry = new THREE.PlaneGeometry(sizeX, sizeY);
 	const material = new THREE.MeshBasicMaterial(
     {
 	  color: colorProp,
 	  transparent: true,
-	  opacity: 0.5
+	  opacity: 0.7
 	});
 
 	checkProp = new THREE.Mesh(geometry, material);
 	checkProp.rotation.x = -Math.PI / 2;
+
+    const texture = createTextureFromAtlas(atlas, textID, numRow, numCol);
+    checkProp.material.map = texture;
+    checkProp.material.needsUpdate = true;
+
 	scene.add(checkProp);
 }
 
@@ -356,7 +374,8 @@ export function updateCheckProp(position, colorProp)
     if (checkProp == null || selectedAddProp.sizeName != lastselectedSizeName)
     {
         removeCheckProp();
-        createCheckProp(position, colorProp, selectedAddProp.sizeType.sizeX, selectedAddProp.sizeType.sizeY);
+        createCheckProp(position, colorProp, selectedAddProp.sizeType.sizeX, selectedAddProp.sizeType.sizeY, selectedAddProp.texturePath,
+                            selectedAddProp.numCols, selectedAddProp.numRows, selectedAddProp.textID);
     }
     checkProp.material.color.set(colorProp);
     
